@@ -1,9 +1,14 @@
 const express = require("express");
 require('dotenv').config();
 const { connectToMongoDB } = require("./connection.js");
+const urlRoute = require("./routes/url.route.js");
 
 const app = express();
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/url", urlRoute);
 
 connectToMongoDB()
     .then(() =>{
