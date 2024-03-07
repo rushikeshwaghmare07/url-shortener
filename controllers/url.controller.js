@@ -1,7 +1,7 @@
 const ShortUniqueId = require("short-unique-id");
 const URL = require("../models/url.model.js");
 
-
+// Function to generate short URL
 async function handleGenerateShortURL(req, res) {
   const body = req.body;
   if (!body.url) {
@@ -24,6 +24,27 @@ async function handleGenerateShortURL(req, res) {
   }
 }
 
+// Function to handle redirection of short URL to original URL
+async function handleRedirectURL(req, res) {
+  const shortId = req.params.shortId;
+  try {
+    const result = await URL.findOneAndUpdate(
+      { shortId },
+      { $push: { visitHistory: { timestamps: Date.now() } } },
+      { new: true } // Return the updated document
+    );
+    if (!result) {
+      return res.status(404).json({ error: "Short URL not found" });
+    }
+    // Redirect to the original URL
+    res.redirect(result.redirectURL);
+  } catch (error) {
+    console.log("Error redirecting:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
-    handleGenerateShortURL,
+  handleGenerateShortURL,
+  handleRedirectURL,
 };

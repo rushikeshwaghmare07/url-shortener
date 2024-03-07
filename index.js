@@ -5,10 +5,15 @@ const urlRoute = require("./routes/url.route.js");
 
 const app = express();
 
-
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Routes
 app.use("/url", urlRoute);
+
+// Redirect to original URL for short URLs
+app.get("/:shortId", urlRoute);
 
 connectToMongoDB()
     .then(() =>{
