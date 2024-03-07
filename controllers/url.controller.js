@@ -44,7 +44,23 @@ async function handleRedirectURL(req, res) {
   }
 }
 
+// Function to get analytics for a short URL
+async function handleGetAnalytics(req, res) {
+  const shortId = req.params.shortId;
+  try {
+    const result = await URL.findOne({ shortId });
+    return res.json({
+      totalClicks: result ? result.visitHistory.length : 0,
+      analytics: result ? result.visitHistory : [],
+    });
+  } catch (error) {
+    console.log("Error getting analytics:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   handleGenerateShortURL,
   handleRedirectURL,
+  handleGetAnalytics
 };
