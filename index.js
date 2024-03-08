@@ -3,6 +3,7 @@ require('dotenv').config();
 const path = require("path");
 const { connectToMongoDB } = require("./connection.js");
 const urlRoute = require("./routes/url.route.js");
+const staticRoute = require("./routes/static.route.js");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/url", urlRoute);
+app.use("/", staticRoute);
 
 // Redirect to original URL for short URLs
 app.get("/:shortId", urlRoute);
