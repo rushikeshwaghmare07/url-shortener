@@ -7,6 +7,7 @@ Design a URL Shortener service that takes a valid URL as input and returns a sho
 - Generate Short URLs: Convert long URLs into short, easy-to-share URLs.
 - Redirect Functionality: Users are redirected to the original URL when accessing short URLs.
 - Analytics Tracking: Track and display analytics for each shortened URL, including total visits/clicks.
+- User Authentication (JWT): Implement user authentication using JWT to secure access to certain features or endpoints.
 
 
 ## Technologies Used
