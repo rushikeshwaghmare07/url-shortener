@@ -1,7 +1,9 @@
 const express = require("express");
 require('dotenv').config();
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const { connectToMongoDB } = require("./connection.js");
+const { restrictToLoggedInUserOnly } = require("./middlewares/auth.middleware.js");
 
 const urlRoute = require("./routes/url.route.js");
 const staticRoute = require("./routes/static.route.js");
@@ -27,9 +29,10 @@ app.set("views", path.resolve("./views"));
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded ({ extended: false }));
+app.use(cookieParser());
 
 // Routes
-app.use("/url", urlRoute);
+app.use("/url", restrictToLoggedInUserOnly, urlRoute);
 app.use("/user", userRoute);
 app.use("/", staticRoute);
 
