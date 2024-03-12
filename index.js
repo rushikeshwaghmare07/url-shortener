@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const { connectToMongoDB } = require("./connection.js");
 const { restrictToLoggedInUserOnly, checkAuth } = require("./middlewares/auth.middleware.js");
+const { checkForAuthentication, restrictTo } = require("./middlewares/auth.middleware.js");
 
 const urlRoute = require("./routes/url.route.js");
 const staticRoute = require("./routes/static.route.js");
@@ -30,11 +31,12 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded ({ extended: false }));
 app.use(cookieParser());
+app.use(checkForAuthentication);
 
 // Routes
-app.use("/url", restrictToLoggedInUserOnly, urlRoute);
+app.use("/url", restrictTo(["NORMAL"]), urlRoute);
 app.use("/user", userRoute);
-app.use("/", checkAuth, staticRoute);
+app.use("/", staticRoute);
 
 // Redirect to original URL for short URLs
 app.get("/:shortId", urlRoute);
